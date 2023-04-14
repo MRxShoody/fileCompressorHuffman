@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include "sortFrequency.h"
 #include "math.h"
 
@@ -8,11 +9,11 @@
 NODE *sortedFrequencyToTree(LIST *list);
 void printTree(NODE *node);
 void printArray(int arr[], int n);
-void printHuffCodes(NODE *top, int arr[], int etage, int* dictonary);
-void putInDictionary(int* dictonary, char character, int n, int *arr);
+void printHuffCodes(NODE *top, int bitsArray[], int etage, DICTIONARY* dictionary);
+void putInDictionary(int* arr, int etage,DICTIONARY* dictionary,char character);
 
 
-void printHuffCodesV2(NODE *top, int arr[], int etage);
+void printHuffCodesV2(NODE *top, int arr[], int etage,DICTIONARY* dictionary);
 
 
 NODE *sortedFrequenceToTree(LIST *list){
@@ -61,55 +62,61 @@ void printTree(NODE *top){
 
 
 
-void printHuffCodes(NODE *top, int arr[], int etage, int* dictonary) {
+void printHuffCodes(NODE *top, int* bitsArray, int etage, DICTIONARY* dictionary) {
     if (top == NULL)
         return;
 
-    arr[etage] = 0;
-    printHuffCodes(top->left, arr, etage + 1,dictonary);
+    bitsArray[etage] = 0;
+    printHuffCodes(top->left, bitsArray, etage + 1, dictionary);
 
     if(top->character != '1') {
         printf("%c   | ", top->character);
-        printArray(arr, etage );
-        putInDictionary(dictonary, top->character, etage,arr);
+        printArray(bitsArray, etage );
+        putInDictionary(bitsArray,etage,dictionary,top->character);
+        printf("\n");
     }
 
-    arr[etage] = 1;
-    printHuffCodes(top->right, arr, etage + 1,dictonary);
+    bitsArray[etage] = 1;
+    printHuffCodes(top->right, bitsArray, etage + 1, dictionary);
 }
 
 
 
-void printHuffCodesV2(NODE *top, int arr[], int etage) {
+void printHuffCodesV2(NODE *top, int arr[], int etage,DICTIONARY* dictionary) {
     if(top->left){
         arr[etage] = 0;
-        printHuffCodesV2(top->left, arr, etage + 1);
+        printHuffCodesV2(top->left, arr, etage + 1, dictionary);
     }
 
     if(top->right){
         arr[etage] = 1;
-        printHuffCodesV2(top->right, arr, etage + 1);
+        printHuffCodesV2(top->right, arr, etage + 1,dictionary);
     }
 
     if(!top->left && !top->right){
         printf("%c   | ", top->character);
         printArray(arr, etage);
+        putInDictionary(arr,etage,dictionary,top->character);
+        printf("\n");
     }
 }
 
 void printArray(int arr[], int n) {
     int i;
-    for (i = 0; i < n; ++i)
+    for (i = 0; i < n; ++i) {
         printf("%d", arr[i]);
-
-    printf("\n");
+    }
 }
 
-//WIP
+void putInDictionary(int arr[], int etage, DICTIONARY* dictionary, char character){
+    int index = character-'a';
+    dictionary[index].size = etage;
+    dictionary[index].bit = malloc(etage * sizeof(int));
 
-void putInDictionary(int* dictonary, char character, int n, int* arr){
-    int i;
-    for (i = 0; i<n;++i){
-        dictonary[character-'a'] = 10 * dictonary[character-'a'] + arr[i];
+    printf("\ndictionary for %c array : ", character);
+
+    for (int i = 0; i < etage; ++i){
+        printf("%d", arr[i]);
+        dictionary[index].bit[i] = arr[i];
     }
 }

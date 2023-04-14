@@ -5,7 +5,7 @@
 //en utilisant les codes ascii des caractères pour les diriger à un endroit précis du dictionnaire
 //qui est un tableau de 26 cases
 
-//ouvre le fichier texte.txt et compte le nombre d'occurence de chaque lettre
+//ouvre le fichier texte1.txt et compte le nombre d'occurence de chaque lettre
 void charactersFrequency (int* repertoire, FILE* file);
 
 //créer un dictionnaire de 26 grâce aux codes ascii des caractères

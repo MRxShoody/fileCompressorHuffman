@@ -2,6 +2,7 @@
 
 typedef struct _NODE NODE;              //définition du type NODE
 typedef struct _DOUBLYLINKEDLIST LIST;  //définition du type LIST
+typedef struct _DICTIONARY DICTIONARY;
 
 
 struct _NODE{                  //définition de la structure NODE
@@ -20,6 +21,9 @@ struct _DOUBLYLINKEDLIST{     //définition de la structure LIST
     int size;
 };
 
-
+struct _DICTIONARY{
+    int size;
+    int *bit;
+};
 
 
