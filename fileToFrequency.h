@@ -6,7 +6,7 @@
 //qui est un tableau de 26 cases
 
 //ouvre le fichier texte1.txt et compte le nombre d'occurence de chaque lettre
-void charactersFrequency (int* repertoire, FILE* file);
+int charactersFrequency (int* repertoire, FILE* file);
 
 //créer un dictionnaire de 26 grâce aux codes ascii des caractères
 //on se limite à des lettres minuscules pour simplifier
@@ -25,13 +25,16 @@ int* repertoireInit (void ) {
 }
 
 
-void charactersFrequency (int* repertoire, FILE* file) {
+int charactersFrequency (int* repertoire, FILE* file) {
 
-    char c = 0;
+    char c;
+    int i = 0;
     while ((c = fgetc(file)) != EOF) {
         repertoire[c-'a'] = repertoire[c-'a'] + 1;
-    }
+        i++;
 
+    }
+    return i;
 }
 
 void printRepertoire (int* repertoire) {

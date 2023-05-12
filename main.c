@@ -3,11 +3,11 @@
 
 
 int main() {
-    FILE* file = fopen("texte2.txt", "r");
+    FILE* file = fopen("texte1.txt", "r");
 
     int* repertoire = repertoireInit();
 
-    charactersFrequency(repertoire, file);
+    int bytes = charactersFrequency(repertoire, file);
 
     fclose(file);
 
@@ -39,36 +39,63 @@ int main() {
 
 
     FILE* file1 = fopen("compressedFile.txt", "wb");
+    FILE* file2 = fopen("texte1.txt", "r");
 
-    FILE* file3 = fopen("texte2.txt", "r");
     char c;
     int index = 0;
-    unsigned char z = 0x00;
-    while ((c = fgetc(file3)) != EOF) {
+    int i;
+    int bytes2 = 0;
+    unsigned char z = 0b00000000;
 
-        //printf("%c",c);
-        int i = 0;
+    while ((c = fgetc(file2)) != EOF){
+
+        if (c == '\n') {
+            continue;
+        }
+
+        i = 0;
 
         while (i < dictionary[c-'a'].size) {
 
-            if (dictionary[c-'a'].bit[index] == 1){
-                z |= 1 << index;
-            } else {
-                z = z << 1;
+            if (dictionary[c-'a'].bit[i] == 1){
+                z |= 0b00000001;
             }
+
+            z = z << 1;
+
+            //printf("%d", dictionary[c-'a'].bit[i]);
+
             i++;
 
-            //printf("%d",index);
+            if (index % 8 == 0 && index != 0) {
 
-            if (index % 8 == 0) {
+                fflush(file1);
 
-                printf("%x", z);
+
+                fwrite(&z, sizeof(unsigned char), 1, file1);
+
+
+                //printf("%c", z);
+
+                bytes2++;
                 index = 0;
-                z = 0x00;
+                z = 0b00000000;
             }
+
+
             index++;
         }
+
     }
+
+    char a = '\n';
+    printf("%d", a);
+
+    printf("\nbytes : %d", bytes);
+    printf("\nbytes2 : %d", bytes2);
+
+    printf("\ncompression rate : ");
+    printf("%f", (float)bytes2/(float)bytes);
 
     return 0;
 }
