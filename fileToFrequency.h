@@ -17,8 +17,8 @@ void printRepertoire (int* repertoire);
 
 
 int* repertoireInit (void ) {
-    int* dictonary = malloc(sizeof(int)*26);
-    for (int i = 0; i < 26; i++) {
+    int* dictonary = malloc(sizeof(int)*163);
+    for (int i = 0; i < 113; i++) {
         dictonary[i]= 0;
     }
     return dictonary;
@@ -30,7 +30,7 @@ int charactersFrequency (int* repertoire, FILE* file) {
     char c;
     int i = 0;
     while ((c = fgetc(file)) != EOF) {
-        repertoire[c-'a'] = repertoire[c-'a'] + 1;
+        repertoire[c-'\n'] = repertoire[c-'\n'] + 1;
         i++;
 
     }
@@ -38,7 +38,7 @@ int charactersFrequency (int* repertoire, FILE* file) {
 }
 
 void printRepertoire (int* repertoire) {
-    for (int i = 0; i < 26; i++) {
-        printf("%c : %d\n", i + 'a', repertoire[i]);
+    for (int i = 0; i < 113; i++) {
+        printf("%c : %d\n", i + '\n', repertoire[i]);
     }
 }

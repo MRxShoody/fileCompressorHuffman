@@ -15,8 +15,8 @@ int main() {
 
     LIST* list = listInit();
 
-    for (int i = 0; i < 26; i++) {
-        appendToList(list, (char)(i + 'a'), repertoire[i]);
+    for (int i = 0; i < 113; i++) {
+        appendToList(list, (char)(i + '\n'), repertoire[i]);
     }
 
     printRepertoire(repertoire);
@@ -30,8 +30,8 @@ int main() {
     printf("\nimpression de l'arbre\n");
     printTree(top);
 
-    int* arr = malloc(26*sizeof(int));
-    DICTIONARY* dictionary = malloc(26* sizeof(DICTIONARY));
+    int* arr = malloc(113*sizeof(int));
+    DICTIONARY* dictionary = malloc(113 * sizeof(DICTIONARY));
 
     printf("\nimpression des codes de huffman");
     printf("\nimpression du dictionnaire operationnel\n");
@@ -49,15 +49,12 @@ int main() {
 
     while ((c = fgetc(file2)) != EOF){
 
-        if (c == '\n') {
-            continue;
-        }
 
         i = 0;
 
-        while (i < dictionary[c-'a'].size) {
+        while (i < dictionary[c-'\n'].size) {
 
-            if (dictionary[c-'a'].bit[i] == 1){
+            if (dictionary[c-'\n'].bit[i] == 1){
                 z |= 0b00000001;
             }
 
@@ -87,9 +84,6 @@ int main() {
         }
 
     }
-
-    char a = '\n';
-    printf("%d", a);
 
     printf("\nbytes : %d", bytes);
     printf("\nbytes2 : %d", bytes2);

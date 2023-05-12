@@ -54,8 +54,13 @@ void printTree(NODE *top){
 
     printTree(top->left);
 
-    if(top->character != '1')
-        printf("%c : %d\n", top->character, top->frequency);
+    if(top->character != '1') {
+        if (top->character == '\n') {
+            printf("\\n : %d\n", top->frequency);
+        } else {
+            printf("%c : %d\n", top->character, top->frequency);
+        }
+    }
 
     printTree(top->right);
 }
@@ -70,7 +75,16 @@ void printHuffCodes(NODE *top, int* bitsArray, int etage, DICTIONARY* dictionary
     printHuffCodes(top->left, bitsArray, etage + 1, dictionary);
 
     if(top->character != '1') {
-        printf("%c   | ", top->character);
+
+        if(top->character == '\n')
+            {
+                printf("\\n   | ");
+            }
+        else
+            {
+                printf("%c   | ", top->character);
+            }
+
         printArray(bitsArray, etage );
         putInDictionary(bitsArray,etage,dictionary,top->character);
         printf("\n");
@@ -109,11 +123,14 @@ void printArray(int arr[], int n) {
 }
 
 void putInDictionary(int arr[], int etage, DICTIONARY* dictionary, char character){
-    int index = character-'a';
+    int index = character-'\n';
     dictionary[index].size = etage;
     dictionary[index].bit = malloc(etage * sizeof(int));
 
-    printf("\ndictionary for %c array : ", character);
+    if(character == '\n')
+        printf("\ndictionary for \\n array : ");
+    else
+        printf("\ndictionary for %c array : ", character);
 
     for (int i = 0; i < etage; ++i){
         printf("%d", arr[i]);
