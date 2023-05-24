@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include "structures.h"
 
 //Dans cette étape, je vais utiliser une liste chainée
 //ou la tête contient le chactère le plus courant avec sa frequence
@@ -10,11 +6,8 @@
 //ajoute un élément à la fin de la liste
 void appendToList(LIST *list, char character, int frequency);
 
-//affiche la liste
-void printList(LIST *list);
-
 //initialise la liste
-LIST* listInit(void);
+LIST* listInit(int* reportoire);
 
 //trie la liste
 void sortList(LIST *list);
@@ -22,9 +15,13 @@ void sortList(LIST *list);
 void removeHead(LIST *list);
 void appendNode(LIST *list, NODE *node);
 
-LIST* listInit(void){
+LIST* listInit(int* repertoire){
     LIST* list = malloc(sizeof(LIST));
     list->size = 0;
+
+    for (int i = 0; i < 113; i++) {
+        appendToList(list, (char)(i + '\n'), repertoire[i]);
+    }
     return list;
 }
 
@@ -61,18 +58,6 @@ void appendToList(LIST *list, char character, int frequency){
 
     list->size++;
 }
-
-
-
-void printList(LIST *list){
-    NODE *node = list->first;
-    //parcours de la liste
-    for (int i = 0; i < list->size; ++i) {
-        printf("%c : %d\n", node->character, node->frequency);
-        node = node->next;
-    }
-}
-
 
 void sortList(LIST *list){
 
@@ -145,8 +130,5 @@ void appendNode(LIST *list, NODE *node){
         list->last = node;
         list->last->next = NULL;
     }
-
     list->size++;
-
-
 }

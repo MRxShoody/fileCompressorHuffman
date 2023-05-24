@@ -1,4 +1,7 @@
 //definitions des structures pour la liste chainée
+#include <stdio.h>
+#include <stdlib.h>
+
 
 typedef struct _NODE NODE;              //définition du type NODE
 typedef struct _DOUBLYLINKEDLIST LIST;  //définition du type LIST
