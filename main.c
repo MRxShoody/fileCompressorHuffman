@@ -23,8 +23,9 @@ int main() {
 
     char prompt[100];
     printf("Enter prompt: ");
+
     fgets(prompt, sizeof(prompt), stdin);
-    prompt[strcspn(prompt, "\n")] = '\0'; // remove newline character
+    prompt[strcspn(prompt, "\n")] = '\0';
     char *token = strtok(prompt, " ");
 
     if(strcmp(token,"exit") == 0) {
@@ -39,14 +40,10 @@ int main() {
     char *infile = strtok(NULL, " ");
     char *outfile = strtok(NULL, " ");
 
-
     if (action == NULL) {
         printf("Invalid prompt\n");
         main();
     }
-//    printf("Action: %s\n", action);
-//    printf("Input files: %s\n", infile);
-//    printf("Output files: %s\n", outfile);
 
     if(strcmp(action,"encode") == 0){
 
@@ -55,14 +52,19 @@ int main() {
             main();
         }
 
+
         int* repertoire = repertoireInit();
 
-
         FILE* file = fopen(infile, "r");
+
+        if (file == NULL) {
+            printf("Invalid file\n");
+            main();
+        }
+
         int bytes = charactersFrequency(repertoire, file);
 
         LIST* list = listInit(repertoire);
-
 
         char prefix[100] = "encoded";
         char newoutfile[100];
@@ -70,16 +72,13 @@ int main() {
         strcat(newoutfile, outfile);
         //printf("New outfile: %s\n", newoutfile);
 
-
         FILE* f = fopen(newoutfile,"w");
         repertoireToFile(repertoire, f);
         //printRepertoire(repertoire);
 
-
         sortList(list);
 
         NODE* top = sortedFrequenceToTree(list);
-
 
         //printf("\nimpression de l'arbre\n");
         //printTree(top);
@@ -87,9 +86,7 @@ int main() {
         int* arr = malloc(113*sizeof(int));
         DICTIONARY* dictionary = malloc(113 * sizeof(DICTIONARY));
 
-
         convertHuffCodes(top, arr, 0, dictionary, false);
-
 
         FILE* file1 = fopen(outfile, "wb");
         FILE* file2 = fopen(infile, "r");
@@ -97,7 +94,6 @@ int main() {
         int bytes2 = compression(file2,file1,dictionary);
 
         printCompressionRate(bytes,bytes2);
-
 
         main();
     }
@@ -109,23 +105,27 @@ int main() {
             main();
         }
 
-        if (action == NULL || infile == NULL || outfile == NULL) {
-            printf("Invalid prompt\n");
+        FILE* file1 = fopen(infile, "rb");
+
+        if (file1 == NULL) {
+            printf("Invalid file\n");
             main();
         }
 
-        FILE* file1 = fopen(infile, "rb");
         FILE* file2 = fopen(outfile, "w");
-
 
         char prefix[100] = "encoded";
         char newoutfile[100];
         strcpy(newoutfile, prefix);
         strcat(newoutfile, infile);
-        //printf("New outfile: %s\n", newoutfile);
-
 
         FILE* f = fopen(newoutfile,"r");
+
+        if (f == NULL) {
+            printf("Encoded file not here\n");
+            main();
+        }
+
         int* repertoire = repertoireInit();
         fileToRepertoire(repertoire, f);
 
@@ -137,6 +137,7 @@ int main() {
 
         decompress(file1,file2,top);
 
+        printf("Decompression done\n");
         main();
     }
 
@@ -152,10 +153,15 @@ int main() {
         strcpy(newoutfile, prefix);
         strcat(newoutfile, infile);
 
-
         FILE *file = fopen(newoutfile, "r");
+        if (file == NULL) {
+            printf("encoded file not found\n");
+            main();
+        }
         int *repertoire = repertoireInit();
+
         fileToRepertoire(repertoire, file);
+
         LIST *list = listInit(repertoire);
 
         sortList(list);
@@ -163,6 +169,7 @@ int main() {
         NODE *top = sortedFrequenceToTree(list);
 
         int *arr = malloc(113 * sizeof(int));
+
         DICTIONARY *dictionary = malloc(113 * sizeof(DICTIONARY));
 
         convertHuffCodes(top, arr, 0, dictionary, true);

@@ -33,12 +33,12 @@ int charactersFrequency (int* repertoire, FILE* file) {
         i++;
 
     }
-
     fclose(file);
     return i;
 }
 
 void printRepertoire (int* repertoire) {
+
     for (int i = 0; i < 113; i++) {
         printf("%c : %d\n", i + '\n', repertoire[i]);
     }
@@ -56,6 +56,7 @@ void repertoireToFile (const int* repertoire, FILE* write) {
 }
 
 void fileToRepertoire (int* repertoire, FILE* read) {
+
     char line[100];
     int num;
     int index = 0;
