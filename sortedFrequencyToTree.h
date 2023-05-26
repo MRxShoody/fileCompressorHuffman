@@ -102,17 +102,7 @@ void putInDictionary(int arr[], int etage, DICTIONARY* dictionary, char characte
     dictionary[index].size = etage;
     dictionary[index].bit = malloc(etage * sizeof(int));
 
-//    if(print) {
-//        if (character == '\n')
-//            printf("\ndictionary for \\n array : ");
-//        else
-//            printf("\ndictionary for %c array : ", character);
-//    }
-
     for (int i = 0; i < etage; ++i){
-//        if(print) {
-//            printf("%d", arr[i]);
-//        }
         dictionary[index].bit[i] = arr[i];
     }
 }

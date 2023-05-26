@@ -12,8 +12,8 @@ int* repertoireInit (void);
 //affiche le dictionnaire
 void printRepertoire (int* repertoire);
 
-void repertoireToFile (const int* repertoire, FILE* read);
-void fileToRepertoire (int* repertoire, FILE* read);
+void repertoireToFile (const int* repertoire, FILE* read, float cr);
+float fileToRepertoire (int* repertoire, FILE* read);
 
 int* repertoireInit (void ) {
     int* dictonary = malloc(sizeof(int)*113);
@@ -44,26 +44,32 @@ void printRepertoire (int* repertoire) {
     }
 }
 
-void repertoireToFile (const int* repertoire, FILE* write) {
+void repertoireToFile (const int* repertoire, FILE* write, float cr) {
 
+    fprintf(write, "%f\n", cr);
     for (int i = 0; i < 113; i++) {
         int temp = repertoire[i];
-        char str[10];
-        sprintf(str, "%d\n", temp);
-        fputs(str, write);
+        fprintf(write, "%d\n", temp);
     }
     fclose(write);
 }
 
-void fileToRepertoire (int* repertoire, FILE* read) {
+float fileToRepertoire (int* repertoire, FILE* read) {
 
     char line[100];
     int num;
+    float cr;
     int index = 0;
     while (fgets(line, sizeof(line), read)) {
+        if (index == 0) {
+            sscanf(line, "%f", &cr);
+            index++;
+            continue;
+        }
         sscanf(line, "%d", &num);
-        repertoire[index] = num;
+        repertoire[index-1] = num;
         index++;
     }
     fclose(read);
+    return cr;
 }

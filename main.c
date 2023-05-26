@@ -6,7 +6,7 @@
 #include "string.h"
 
 
-void printCompressionRate(int byte1,int byte2);
+float printCompressionRate(int byte1,int byte2);
 
 // FORMAT :
 // compress (encode|decode) <input file> <output file>
@@ -17,10 +17,15 @@ void printCompressionRate(int byte1,int byte2);
 // compress decode compressed.txt decompressed.txt
 // compress stat compressed.txt
 
-//TODO: ERROR HANDLING (invalid file, etc)
-
 int main() {
 
+    /*********************************************************************************************************************
+    * DRIVER CODE
+    ********************************************************************************************************************/
+
+    int running = true;
+
+    while(running){
     char prompt[100];
     printf("Enter prompt: ");
 
@@ -33,7 +38,7 @@ int main() {
     }
     if (strcmp(token, "compress") != 0) {
         printf("Invalid prompt\n");
-        main();
+        continue;
     }
 
     char *action = strtok(NULL, " ");
@@ -42,39 +47,32 @@ int main() {
 
     if (action == NULL) {
         printf("Invalid prompt\n");
-        main();
+        continue;
     }
+
+    /*********************************************************************************************************************
+     * COMPRESSION
+     ********************************************************************************************************************/
 
     if(strcmp(action,"encode") == 0){
 
         if (infile == NULL || outfile == NULL) {
             printf("Invalid prompt\n");
-            main();
+            continue;
         }
-
 
         int* repertoire = repertoireInit();
 
         FILE* file = fopen(infile, "r");
 
         if (file == NULL) {
-            printf("Invalid file\n");
-            main();
+            printf("infile does not exist\n");
+            continue;
         }
 
         int bytes = charactersFrequency(repertoire, file);
 
         LIST* list = listInit(repertoire);
-
-        char prefix[100] = "encoded";
-        char newoutfile[100];
-        strcpy(newoutfile, prefix);
-        strcat(newoutfile, outfile);
-        //printf("New outfile: %s\n", newoutfile);
-
-        FILE* f = fopen(newoutfile,"w");
-        repertoireToFile(repertoire, f);
-        //printRepertoire(repertoire);
 
         sortList(list);
 
@@ -93,23 +91,43 @@ int main() {
 
         int bytes2 = compression(file2,file1,dictionary);
 
-        printCompressionRate(bytes,bytes2);
+        float cr = printCompressionRate(bytes,bytes2);
 
-        main();
+        char prefix[100] = "encoded";
+        char newoutfile[100];
+        strcpy(newoutfile, prefix);
+        strcat(newoutfile, outfile);
+
+        FILE* f = fopen(newoutfile,"w");
+        repertoireToFile(repertoire, f,cr);
+
+        free(repertoire);
+        free(list);
+        free(top);
+        free(arr);
+        free(dictionary);
+
+        printf("Compression successful\n");
+
+        continue;
     }
+
+    /*********************************************************************************************************************
+     * DECOMPRESSION
+     ********************************************************************************************************************/
 
     if(strcmp(action,"decode") == 0){
 
         if (infile == NULL || outfile == NULL) {
             printf("Invalid prompt\n");
-            main();
+            continue;
         }
 
         FILE* file1 = fopen(infile, "rb");
 
         if (file1 == NULL) {
-            printf("Invalid file\n");
-            main();
+            printf("infile does not exist\n");
+            continue;
         }
 
         FILE* file2 = fopen(outfile, "w");
@@ -122,11 +140,12 @@ int main() {
         FILE* f = fopen(newoutfile,"r");
 
         if (f == NULL) {
-            printf("Encoded file not here\n");
-            main();
+            printf("Encoded file not here. Please re-encode the desired file\n");
+            continue;
         }
 
         int* repertoire = repertoireInit();
+
         fileToRepertoire(repertoire, f);
 
         LIST* list = listInit(repertoire);
@@ -137,15 +156,23 @@ int main() {
 
         decompress(file1,file2,top);
 
-        printf("Decompression done\n");
-        main();
+        free(repertoire);
+        free(list);
+        free(top);
+
+        printf("Decompression successful\n");
+        continue;
     }
 
-    if(strcmp(action,"stat") == 0) {
+    /*********************************************************************************************************************
+     * STAT
+     ********************************************************************************************************************/
+
+        if(strcmp(action,"stat") == 0) {
 
         if (infile == NULL) {
-            printf("Invalid prompt\n");
-            main();
+            printf("infile does not exist\n");
+            continue;
         }
 
         char prefix[100] = "encoded";
@@ -155,12 +182,13 @@ int main() {
 
         FILE *file = fopen(newoutfile, "r");
         if (file == NULL) {
-            printf("encoded file not found\n");
-            main();
+            printf("Encoded file not here. Please re-encode the desired file\n");
+            continue;
         }
+
         int *repertoire = repertoireInit();
 
-        fileToRepertoire(repertoire, file);
+        float cr = fileToRepertoire(repertoire, file);
 
         LIST *list = listInit(repertoire);
 
@@ -174,16 +202,24 @@ int main() {
 
         convertHuffCodes(top, arr, 0, dictionary, true);
 
-        main();
+        printf("\nCompression rate : %0.2f\n", cr);
+
+        free(repertoire);
+        free(list);
+        free(arr);
+        free(top);
+        free(dictionary);
+
+        continue;
+        }
     }
 }
 
-void printCompressionRate(int byte1,int byte2){
+float printCompressionRate(int byte1,int byte2){
 
-    //printf("\nbytes : %d", byte1);
-    //printf("\nbytes2 : %d", byte2);
+    //printf("compression rate : %0.2f \n", ((float)byte1/(float)byte2));
 
-    printf("compression rate : %0.2f \n", ((float)byte1/(float)byte2));
+    return (float)byte1/(float)byte2;
 }
 
 
