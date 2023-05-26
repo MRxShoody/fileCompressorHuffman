@@ -1,20 +1,13 @@
-//Dans cette étape je vais comptabiliser le nombre d'occurence de chaque caractère
-//en utilisant les codes ascii des caractères pour les diriger à un endroit précis du dictionnaire
-//qui est un tableau de 26 cases
+// Ce code traite tout ce qui concerne la conversion entre fichier / fréquence
 
-//ouvre le fichier texte1.txt et compte le nombre d'occurence de chaque lettre
 int charactersFrequency (int* repertoire, FILE* file);
-
-//créer un dictionnaire de 26 grâce aux codes ascii des caractères
-//on se limite à des lettres minuscules pour simplifier
 int* repertoireInit (void);
-
-//affiche le dictionnaire
 void printRepertoire (int* repertoire);
-
 void repertoireToFile (const int* repertoire, FILE* read, float cr);
 float fileToRepertoire (int* repertoire, FILE* read);
 
+//Ce code initialise le tableau de fréquence appellé repertoire et
+// initialise les valeurs à 0
 int* repertoireInit (void ) {
     int* dictonary = malloc(sizeof(int)*113);
     for (int i = 0; i < 113; i++) {
@@ -23,7 +16,8 @@ int* repertoireInit (void ) {
     return dictonary;
 }
 
-
+//Ce code compte le nombre d'occurence de chaque caractère
+//et le stock dans repertoire grâce à leur code ascii
 int charactersFrequency (int* repertoire, FILE* file) {
 
     char c;
@@ -37,13 +31,18 @@ int charactersFrequency (int* repertoire, FILE* file) {
     return i;
 }
 
+//afficher les fréquences de chaque caractère contenu dans repertoire
+//pour débugger
 void printRepertoire (int* repertoire) {
 
     for (int i = 0; i < 113; i++) {
         printf("%c : %d\n", i + '\n', repertoire[i]);
     }
+
 }
 
+
+//Ce code écrit dans un fichier les fréquences des caractères
 void repertoireToFile (const int* repertoire, FILE* write, float cr) {
 
     fprintf(write, "%f\n", cr);
@@ -52,8 +51,11 @@ void repertoireToFile (const int* repertoire, FILE* write, float cr) {
         fprintf(write, "%d\n", temp);
     }
     fclose(write);
+
 }
 
+//Ce code lit dans un fichier les fréquences des caractères
+//afin de reconstituer les codes de huffman
 float fileToRepertoire (int* repertoire, FILE* read) {
 
     char line[100];

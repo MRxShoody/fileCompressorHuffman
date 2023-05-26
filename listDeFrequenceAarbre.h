@@ -1,16 +1,14 @@
+// Ce code convertit la liste triée par fréquence en un arbre binaire de huffman.
+// et créer les codes de huffman associées à chaque caractère
+
 #include <stdbool.h>
 #include <math.h>
 
-//Dans cette étape, je vais convertir ma liste chainée triée en arbre binaire de huffman
-
-
-//renvoie le haut de l'arbre
-NODE *sortedFrequencyToTree(LIST *list);
+NODE *sortedFrequenceToTree(LIST *list);
 void printTree(NODE *node);
 void printArray(int arr[], int n);
 void convertHuffCodes(NODE *top, int bitsArray[], int etage, DICTIONARY *dictionary, int print);
-void putInDictionary(int* arr, int etage,DICTIONARY* dictionary,char character, int print);
-
+void putInDictionary(int arr[], int etage, DICTIONARY *dictionary, char character);
 
 void printHuffCodesV2(NODE *top, int arr[], int etage,DICTIONARY* dictionary);
 
@@ -19,6 +17,12 @@ NODE *sortedFrequenceToTree(LIST *list){
 
     NODE* nodesOfList = list->first;
 
+    //on créer un noeud qui réunit les deux premiers noeuds de la liste
+    //on l'ajoute à la liste
+    //on trie la liste par fréquence
+    //(cela fait office de queue prioritaire)
+    //on supprime les deux premiers noeuds de la liste
+    //on recommence jusqu'à ce qu'il ne reste qu'un seul noeud
     while (list->size > 1) {
 
         NODE *node = malloc(sizeof(NODE));
@@ -41,7 +45,7 @@ NODE *sortedFrequenceToTree(LIST *list){
     }
     return list->first;
 }
-
+//fonction qui affiche l'arbre binaire de huffman avec les fréquences
 void printTree(NODE *top){
     if (top == NULL)
         return;
@@ -59,6 +63,15 @@ void printTree(NODE *top){
     printTree(top->right);
 }
 
+//on réutilise le principe utilisée dans le printTree
+//sauf qu'ici on garde en mémoire si l'on est allé à gauche ou à droit
+//grâce au bitsArray
+//si on est allé à gauche, on met un 0 dans le tableau
+//si on est allé à droite, on met un 1 dans le tableau
+//on fait cela jusqu'à ce qu'on arrive à un noeud qui contient un caractère
+//on ajoute alors le caractère et le tableau dans le dictionnaire de huffman grâce
+//à la fonction putInDictionary
+//on recommence jusqu'à ce qu'on ait parcouru tout l'arbre
 
 void convertHuffCodes(NODE *top, int bitsArray[], int etage, DICTIONARY *dictionary, int print) {
     if (top == NULL)
@@ -75,13 +88,12 @@ void convertHuffCodes(NODE *top, int bitsArray[], int etage, DICTIONARY *diction
                 printf("%c   | ", top->character);
             }
             printArray(bitsArray, etage );
-        }
 
-        putInDictionary(bitsArray,etage,dictionary,top->character,print);
-
-        if(print) {
             printf("\n");
         }
+
+        putInDictionary(bitsArray, etage, dictionary, top->character);
+
     }
 
     bitsArray[etage] = 1;
@@ -89,7 +101,8 @@ void convertHuffCodes(NODE *top, int bitsArray[], int etage, DICTIONARY *diction
 }
 
 
-
+//fonction qui affiche le code de huffman associé à chaque caractère
+//si besoin
 void printArray(int arr[], int n) {
     int i;
     for (i = 0; i < n; ++i) {
@@ -97,7 +110,10 @@ void printArray(int arr[], int n) {
     }
 }
 
-void putInDictionary(int arr[], int etage, DICTIONARY* dictionary, char character, int print){
+//fonction qui ajoute le caractère et le tableau de bits associé
+//grâce au tableau arr et à l'étage où l'on se trouve
+// dans le dictionnaire de huffman
+void putInDictionary(int arr[], int etage, DICTIONARY *dictionary, char character) {
     int index = character-'\n';
     dictionary[index].size = etage;
     dictionary[index].bit = malloc(etage * sizeof(int));

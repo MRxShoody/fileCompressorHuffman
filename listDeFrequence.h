@@ -3,18 +3,16 @@
 //ou la tête contient le chactère le plus courant avec sa frequence
 //et ou la queue contient le caractère le moins courant avec sa frequence
 
-//ajoute un élément à la fin de la liste
+//Ce code est nécessaire pour la création de l'arbre de huffman
+
 void appendToList(LIST *list, char character, int frequency);
-
-//initialise la liste
 LIST* listInit(int* reportoire);
-
-//trie la liste
 void sortList(LIST *list);
-
 void removeHead(LIST *list);
 void appendNode(LIST *list, NODE *node);
 
+//initialise la liste chainée avec les fréquences de chaque caractère
+//à partir du repertoire
 LIST* listInit(int* repertoire){
     LIST* list = malloc(sizeof(LIST));
     list->size = 0;
@@ -25,6 +23,7 @@ LIST* listInit(int* repertoire){
     return list;
 }
 
+//ajoute un noeud à la liste chainée
 void appendToList(LIST *list, char character, int frequency){
     NODE* node = malloc(sizeof(NODE));
 
@@ -59,14 +58,14 @@ void appendToList(LIST *list, char character, int frequency){
     list->size++;
 }
 
+//trie la liste chainée avec un buble sort
+//utilisé pour sa stabilité et simplicité
+// complexité n carré mais la liste est courte (256 au max)
 void sortList(LIST *list){
 
     int swapped, i;
     NODE *ptr1;
     NODE *lptr = NULL;
-
-    //good ol reliable bubble sort
-    //stable pour émuler une queue de priorité dans ma liste chainée
 
     if (list->first == NULL)
         return;
@@ -103,6 +102,7 @@ void sortList(LIST *list){
 
 }
 
+//supprime le premier noeud de la liste chainée
 void removeHead(LIST *list){
     NODE *node = list->first;
     list->first = node->next;
@@ -114,6 +114,7 @@ void removeHead(LIST *list){
     list->size--;
 }
 
+//ajoute un noeud à la liste chainée à la fin
 void appendNode(LIST *list, NODE *node){
     //si la liste est vide
     if(list->size == 0){

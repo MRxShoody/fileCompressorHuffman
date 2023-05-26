@@ -1,6 +1,8 @@
+// Ce fichier contient la fonction de compression
+// il prend avantage des codes de Huffman générés par le programme
+// et des bitshifts pour écrire dans le fichier compressé
+
 #include "structures.h"
-
-
 
 int compression(FILE* read,FILE* write, DICTIONARY* dictionary);
 
@@ -13,7 +15,6 @@ int compression(FILE* read,FILE* write, DICTIONARY* dictionary){
     unsigned char z = 0b00000000;
 
     while ((c = fgetc(read)) != EOF) {
-        //printf("%c", c);
 
         i = 0;
 
@@ -26,15 +27,12 @@ int compression(FILE* read,FILE* write, DICTIONARY* dictionary){
             if (dictionary[c - '\n'].bit[i] == 1) {
                 z = z | 0b00000001;
             }
-            //printf("%d", dictionary[c-'\n'].bit[i]);
 
             i++;
 
             if (index % 8 == 0 && index != 0) {
 
                 fwrite(&z, sizeof(unsigned char), 1, write);
-
-                //printf(" %d %c \n", (signed char)z,z);
 
                 bytes2++;
                 index = 0;
@@ -52,6 +50,10 @@ int compression(FILE* read,FILE* write, DICTIONARY* dictionary){
 
         bytes2++;
     }
+
+    //si le dernier octer n'est pas rempli, on le remplit avec des 0
+    //cependant si un code de huffman est du style 000, alors des charactères inexistants
+    //seront ajoutés à la fin du fichier compressé
 
     fclose(read);
     fclose(write);

@@ -1,7 +1,7 @@
 #include "compression.h"
-#include "fileToFrequency.h"
-#include "sortFrequency.h"
-#include "sortedFrequencyToTree.h"
+#include "repertoireFrequence.h"
+#include "listDeFrequence.h"
+#include "listDeFrequenceAarbre.h"
 #include "decompression.h"
 #include "string.h"
 
@@ -13,7 +13,7 @@ float printCompressionRate(int byte1,int byte2);
 // compress stat <compressed file>
 
 //EXEMPLES
-// compress encode texte1.txt compressed.txt
+// compress encode texte.txt compressed.txt
 // compress decode compressed.txt decompressed.txt
 // compress stat compressed.txt
 
@@ -26,6 +26,7 @@ int main() {
     int running = true;
 
     while(running){
+
     char prompt[100];
     printf("Enter prompt: ");
 
@@ -36,6 +37,7 @@ int main() {
     if(strcmp(token,"exit") == 0) {
         exit(0);
     }
+
     if (strcmp(token, "compress") != 0) {
         printf("Invalid prompt\n");
         continue;

@@ -3,4 +3,4 @@ project(projet C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(projet main.c fileToFrequency.h sortFrequency.h structures.h sortedFrequencyToTree.h compression.h decompression.h)
+add_executable(projet main.c repertoireFrequence.h listDeFrequence.h structures.h listDeFrequenceAarbre.h compression.h decompression.h)
